@@ -1,164 +1,511 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gestión de Ahorros</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Ahorros | Cooperativa de Ahorro y Crédito</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --color-primario: #005691;
+            --color-secundario: #0077b6;
+            --color-exito: #2e7d32;
+            --color-retiro: #d32f2f;
+            --color-advertencia: #ed6c02;
+            --color-fondo: #f8fafc;
+            --color-texto: #1e293b;
+            --sombra-suave: 0 4px 20px rgba(0, 86, 145, 0.12);
+            --sombra-hover: 0 8px 25px rgba(0, 86, 145, 0.2);
+        }
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-body{
-    background:#f5f5f5;
-}
-header{
-    background:#0B4F6C;
-    color:white;
-    padding:20px;
-    text-align:center;
-}
-.container{
-    margin-top:30px;
-}
-</style>
+        body {
+            background-color: var(--color-fondo);
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--color-texto);
+            line-height: 1.6;
+        }
 
+        /* Barra de Navegación */
+        .navbar {
+            background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            padding: 12px 0;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.03);
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* Contenedor Principal */
+        .contenedor-principal {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .titulo-seccion {
+            color: var(--color-primario);
+            font-weight: 700;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--color-secundario);
+            display: inline-block;
+        }
+
+        /* Tarjetas */
+        .tarjeta {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--sombra-suave);
+            border: none;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .tarjeta:hover {
+            box-shadow: var(--sombra-hover);
+            transform: translateY(-2px);
+        }
+
+        .tarjeta-cabecera {
+            background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+            color: white;
+            padding: 18px 25px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .tarjeta-cuerpo {
+            padding: 25px;
+        }
+
+        /* Formularios */
+        .form-label {
+            font-weight: 600;
+            color: var(--color-primario);
+            margin-bottom: 8px;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--color-secundario);
+            box-shadow: 0 0 0 0.25rem rgba(0, 119, 182, 0.25);
+        }
+
+        /* Botones */
+        .btn {
+            border-radius: 8px;
+            padding: 10px 22px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-guardar {
+            background: var(--color-exito);
+            color: white;
+        }
+
+        .btn-guardar:hover {
+            background: #1b5e20;
+        }
+
+        .btn-volver {
+            background: #64748b;
+            color: white;
+        }
+
+        .btn-volver:hover {
+            background: #475569;
+        }
+
+        /* Saldo */
+        .saldo-general {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-secundario);
+            padding: 15px;
+            background: rgba(0, 119, 182, 0.08);
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .saldo-monto {
+            font-size: 32px;
+            color: var(--color-exito);
+        }
+
+        /* Tabla */
+        .tabla-movimientos {
+            margin: 0;
+        }
+
+        .tabla-movimientos thead {
+            background: var(--color-primario);
+            color: white;
+        }
+
+        .tabla-movimientos th, .tabla-movimientos td {
+            padding: 14px 12px;
+            vertical-align: middle;
+            font-size: 14px;
+        }
+
+        .tabla-movimientos tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .tabla-movimientos tbody tr:hover {
+            background: rgba(0, 119, 182, 0.05);
+        }
+
+        .tipo-deposito {
+            color: var(--color-exito);
+            font-weight: 600;
+        }
+
+        .tipo-retiro {
+            color: var(--color-retiro);
+            font-weight: 600;
+        }
+
+        /* Alertas Personalizadas */
+        .alerta {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transform: translateX(400px);
+            transition: transform 0.4s ease;
+            z-index: 9999;
+            max-width: 350px;
+        }
+
+        .alerta.mostrar {
+            transform: translateX(0);
+        }
+
+        .alerta.exito { background: var(--color-exito); }
+        .alerta.error { background: var(--color-retiro); }
+        .alerta.advertencia { background: var(--color-advertencia); }
+
+        /* Pie de página */
+        .pie-pagina {
+            background: var(--color-primario);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 50px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .contenedor-principal {
+                padding: 20px 10px;
+            }
+            .titulo-seccion {
+                font-size: 22px;
+            }
+            .saldo-general {
+                font-size: 20px;
+            }
+            .saldo-monto {
+                font-size: 26px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<header>
-<h2>Gestión de Ahorros</h2>
-</header>
+<!-- Barra de Navegación -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">
+            <i class="fas fa-landmark me-2"></i>Cooperativa
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menuNavegacion">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i>Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="socios.html"><i class="fas fa-users me-1"></i>Socios</a></li>
+                <li class="nav-item"><a class="nav-link active" href="ahorros.html"><i class="fas fa-piggy-bank me-1"></i>Ahorros</a></li>
+                <li class="nav-item"><a class="nav-link" href="reportes.html"><i class="fas fa-file-pdf me-1"></i>Reportes</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-<div class="container">
+<!-- Contenedor Principal -->
+<main class="contenedor-principal">
+    <h2 class="text-center titulo-seccion"><i class="fas fa-piggy-bank me-2"></i>Gestión de Ahorros y Movimientos</h2>
 
-<div class="card p-4 shadow">
+    <!-- Formulario de Registro -->
+    <div class="tarjeta">
+        <div class="tarjeta-cabecera">
+            <i class="fas fa-exchange-alt me-2"></i>Registrar Nuevo Movimiento
+        </div>
+        <div class="tarjeta-cuerpo">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <label class="form-label">Seleccionar Socio *</label>
+                    <select id="socioMovimiento" class="form-select" required>
+                        <option value="">-- Elija un socio registrado --</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Tipo de Movimiento *</label>
+                    <select id="tipoMovimiento" class="form-select" required>
+                        <option value="Depósito">💵 Depósito</option>
+                        <option value="Retiro">💸 Retiro</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Monto ($) *</label>
+                    <input type="number" id="montoMovimiento" class="form-control" min="0.01" step="0.01" placeholder="Ingrese el valor en dólares" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Fecha del Movimiento</label>
+                    <input type="date" id="fechaMovimiento" class="form-control">
+                </div>
+            </div>
 
-<h4>Registrar Movimiento</h4>
+            <div class="text-center mt-5">
+                <button class="btn btn-guardar me-2" id="btnGuardarMovimiento">
+                    <i class="fas fa-save me-1"></i> Guardar Movimiento
+                </button>
+                <a href="index.html" class="btn btn-volver">
+                    <i class="fas fa-arrow-left me-1"></i> Volver al Inicio
+                </a>
+            </div>
+        </div>
+    </div>
 
-<form id="formMovimiento">
+    <!-- Saldo General -->
+    <div class="saldo-general">
+        <i class="fas fa-coins me-2"></i>Saldo Total en la Cooperativa: 
+        <span class="saldo-monto" id="saldoTotal">$ 0.00</span>
+    </div>
 
-<div class="mb-3">
-<label>Nombre del Socio</label>
-<input type="text" id="socio" class="form-control" required>
-</div>
+    <!-- Historial de Movimientos -->
+    <div class="tarjeta">
+        <div class="tarjeta-cabecera">
+            <i class="fas fa-history me-2"></i>Historial Completo de Movimientos
+        </div>
+        <div class="tarjeta-cuerpo p-0">
+            <div class="table-responsive">
+                <table class="table table-striped tabla-movimientos">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Socio</th>
+                            <th>Tipo</th>
+                            <th>Monto ($)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaMovimientos">
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">No hay movimientos registrados aún</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
 
-<div class="mb-3">
-<label>Tipo</label>
-<select id="tipo" class="form-select">
-<option>Depósito</option>
-<option>Retiro</option>
-</select>
-</div>
+<!-- Pie de Página -->
+<footer class="pie-pagina">
+    <p class="mb-2"><strong>Cooperativa de Ahorro y Crédito | Sistema de Gestión de Socios y Ahorros</strong></p>
+    <p class="mb-0">© 2026 Todos los derechos reservados | Desarrollado por: Danny Ariel Cobo Mosquera - Jostin Andrés Guarnizo Vargas</p>
+</footer>
 
-<div class="mb-3">
-<label>Monto</label>
-<input type="number" id="monto" class="form-control" required>
-</div>
+<!-- Contenedor de Alertas -->
+<div id="contenedorAlertas"></div>
 
-<button class="btn btn-success">Guardar</button>
-
-<a href="index.html" class="btn btn-secondary">Volver</a>
-
-</form>
-
-</div>
-
-<div class="card mt-4 shadow">
-
-<div class="card-body">
-
-<h4>Historial</h4>
-
-<table class="table table-bordered">
-
-<thead class="table-dark">
-
-<tr>
-
-<th>Socio</th>
-<th>Tipo</th>
-<th>Monto</th>
-
-</tr>
-
-</thead>
-
-<tbody id="tabla">
-
-</tbody>
-
-</table>
-
-<h3 class="text-primary">
-Saldo General: $ <span id="saldo">0</span>
-</h3>
-
-</div>
-
-</div>
-
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+// 🔔 Función de alertas personalizadas
+function mostrarAlerta(mensaje, tipo = 'exito') {
+    const contenedor = document.getElementById('contenedorAlertas');
+    const alerta = document.createElement('div');
+    alerta.className = `alerta ${tipo}`;
+    alerta.innerHTML = `<i class="fas fa-${tipo === 'exito' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>${mensaje}`;
+    contenedor.appendChild(alerta);
 
-let movimientos=[];
-let saldo=0;
-
-document.getElementById("formMovimiento").addEventListener("submit",function(e){
-
-e.preventDefault();
-
-let socio=document.getElementById("socio").value;
-let tipo=document.getElementById("tipo").value;
-let monto=parseFloat(document.getElementById("monto").value);
-
-if(tipo=="Depósito"){
-saldo+=monto;
-}else{
-saldo-=monto;
+    setTimeout(() => alerta.classList.add('mostrar'), 10);
+    setTimeout(() => {
+        alerta.classList.remove('mostrar');
+        setTimeout(() => alerta.remove(), 400);
+    }, 4000);
 }
 
-movimientos.push({
-socio,
-tipo,
-monto
-});
-
-mostrar();
-
-this.reset();
-
-});
-
-function mostrar(){
-
-let tabla=document.getElementById("tabla");
-
-tabla.innerHTML="";
-
-movimientos.forEach(m=>{
-
-tabla.innerHTML+=`
-
-<tr>
-
-<td>${m.socio}</td>
-
-<td>${m.tipo}</td>
-
-<td>$${m.monto}</td>
-
-</tr>
-
-`;
-
-});
-
-document.getElementById("saldo").innerHTML=saldo;
-
+// 📂 Cargar lista de socios en el select
+function cargarSociosEnSelect() {
+    const socios = JSON.parse(localStorage.getItem('sociosCooperativa')) || [];
+    const select = document.getElementById('socioMovimiento');
+    
+    // Mantener la opción inicial
+    select.innerHTML = `<option value="">-- Elija un socio registrado --</option>`;
+    
+    socios.forEach(socio => {
+        const opcion = document.createElement('option');
+        opcion.value = socio.cedula;
+        opcion.textContent = socio.nombre + ` (Cédula: ${socio.cedula})`;
+        select.appendChild(opcion);
+    });
 }
 
+// 📊 Calcular y mostrar saldo total
+function calcularSaldoTotal() {
+    const movimientos = JSON.parse(localStorage.getItem('movimientosCooperativa')) || [];
+    let saldo = 0;
+
+    movimientos.forEach(mov => {
+        const monto = parseFloat(mov.monto);
+        if (mov.tipo === 'Depósito') saldo += monto;
+        if (mov.tipo === 'Retiro') saldo -= monto;
+    });
+
+    document.getElementById('saldoTotal').textContent = `$ ${saldo.toFixed(2)}`;
+    return saldo;
+}
+
+// 📋 Mostrar todos los movimientos
+function mostrarMovimientos() {
+    const movimientos = JSON.parse(localStorage.getItem('movimientosCooperativa')) || [];
+    const tabla = document.getElementById('listaMovimientos');
+    tabla.innerHTML = '';
+
+    if (movimientos.length === 0) {
+        tabla.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-4">No hay movimientos registrados aún</td></tr>`;
+        calcularSaldoTotal();
+        return;
+    }
+
+    // Ordenar por fecha (más reciente primero)
+    movimientos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+    movimientos.forEach(mov => {
+        const fila = document.createElement('tr');
+        const claseTipo = mov.tipo === 'Depósito' ? 'tipo-deposito' : 'tipo-retiro';
+        const signo = mov.tipo === 'Depósito' ? '+' : '-';
+
+        fila.innerHTML = `
+            <td>${new Date(mov.fecha).toLocaleDateString('es-EC')}</td>
+            <td>${mov.socioNombre}</td>
+            <td class="${claseTipo}">${mov.tipo}</td>
+            <td>${signo} $ ${parseFloat(mov.monto).toFixed(2)}</td>
+        `;
+        tabla.appendChild(fila);
+    });
+
+    calcularSaldoTotal();
+}
+
+// 💾 Guardar nuevo movimiento
+document.getElementById('btnGuardarMovimiento').addEventListener('click', () => {
+    const cedulaSocio = document.getElementById('socioMovimiento').value;
+    const tipo = document.getElementById('tipoMovimiento').value;
+    const monto = document.getElementById('montoMovimiento').value.trim();
+    const fecha = document.getElementById('fechaMovimiento').value || new Date().toISOString().split('T')[0];
+
+    // Validaciones
+    if (!cedulaSocio) {
+        mostrarAlerta('Seleccione un socio de la lista', 'advertencia');
+        return;
+    }
+    if (!monto || parseFloat(monto) <= 0) {
+        mostrarAlerta('Ingrese un monto válido mayor a $0.00', 'advertencia');
+        return;
+    }
+
+    // Obtener nombre del socio
+    const socios = JSON.parse(localStorage.getItem('sociosCooperativa')) || [];
+    const socio = socios.find(s => s.cedula === cedulaSocio);
+    if (!socio) {
+        mostrarAlerta('El socio no está registrado', 'error');
+        return;
+    }
+
+    // Guardar movimiento
+    let movimientos = JSON.parse(localStorage.getItem('movimientosCooperativa')) || [];
+    movimientos.push({
+        cedulaSocio: cedulaSocio,
+        socioNombre: socio.nombre,
+        tipo: tipo,
+        monto: monto,
+        fecha: fecha
+    });
+
+    localStorage.setItem('movimientosCooperativa', JSON.stringify(movimientos));
+    
+    mostrarAlerta(`Movimiento registrado: ${tipo} de $${parseFloat(monto).toFixed(2)} a nombre de ${socio.nombre} ✅`, 'exito');
+    
+    // Limpiar formulario
+    document.getElementById('montoMovimiento').value = '';
+    document.getElementById('fechaMovimiento').value = '';
+    
+    mostrarMovimientos();
+});
+
+// 🚀 Iniciar todo al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    // Poner fecha actual por defecto
+    document.getElementById('fechaMovimiento').valueAsDate = new Date();
+    
+    cargarSociosEnSelect();
+    mostrarMovimientos();
+});
 </script>
-
 </body>
 </html>
+
+
+
