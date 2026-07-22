@@ -1,113 +1,418 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reportes</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes Generales | Cooperativa de Ahorro y Crédito</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --color-primario: #005691;
+            --color-secundario: #0077b6;
+            --color-exito: #2e7d32;
+            --color-retiro: #d32f2f;
+            --color-advertencia: #ed6c02;
+            --color-fondo: #f8fafc;
+            --color-texto: #1e293b;
+            --sombra-suave: 0 4px 20px rgba(0, 86, 145, 0.12);
+            --sombra-hover: 0 8px 25px rgba(0, 86, 145, 0.2);
+        }
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-body{
-    background:#f4f6f9;
-}
+        body {
+            background-color: var(--color-fondo);
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--color-texto);
+            line-height: 1.6;
+        }
 
-header{
-    background:#0B4F6C;
-    color:white;
-    padding:20px;
-    text-align:center;
-}
+        /* Barra de Navegación */
+        .navbar {
+            background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            padding: 12px 0;
+        }
 
-.card{
-    text-align:center;
-    margin-top:20px;
-}
-</style>
+        .navbar-brand {
+            color: white !important;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: transform 0.3s ease;
+        }
 
+        .navbar-brand:hover {
+            transform: scale(1.03);
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* Contenedor Principal */
+        .contenedor-principal {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .titulo-seccion {
+            color: var(--color-primario);
+            font-weight: 700;
+            margin-bottom: 40px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--color-secundario);
+            display: inline-block;
+        }
+
+        /* Tarjetas de Estadísticas */
+        .cuadricula-estadisticas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .tarjeta-resumen {
+            background: white;
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: var(--sombra-suave);
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--color-primario);
+        }
+
+        .tarjeta-resumen:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--sombra-hover);
+        }
+
+        .tarjeta-resumen i {
+            font-size: 42px;
+            margin-bottom: 15px;
+            opacity: 0.85;
+        }
+
+        .tarjeta-resumen .valor {
+            font-size: 36px;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .tarjeta-resumen .etiqueta {
+            font-size: 17px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .tarjeta-socios i { color: var(--color-primario); }
+        .tarjeta-depositos i { color: var(--color-exito); }
+        .tarjeta-retiros i { color: var(--color-retiro); }
+        .tarjeta-saldo i { color: var(--color-secundario); }
+
+        /* Resumen General */
+        .tarjeta-reporte {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--sombra-suave);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .cabecera-reporte {
+            background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+            color: white;
+            padding: 20px 30px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .cuerpo-reporte {
+            padding: 30px;
+        }
+
+        .fila-dato {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 17px;
+        }
+
+        .fila-dato:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            color: var(--color-primario);
+            font-size: 19px;
+            background: rgba(0, 119, 182, 0.05);
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .fila-dato .valor {
+            font-weight: 600;
+        }
+
+        /* Botones */
+        .btn {
+            border-radius: 8px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-volver {
+            background: var(--color-secundario);
+            color: white;
+        }
+
+        .btn-volver:hover {
+            background: #025f99;
+        }
+
+        .btn-descargar {
+            background: var(--color-exito);
+            color: white;
+            margin-right: 15px;
+        }
+
+        .btn-descargar:hover {
+            background: #1b5e20;
+        }
+
+        .contenedor-botones {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Pie de página */
+        .pie-pagina {
+            background: var(--color-primario);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 50px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .contenedor-principal {
+                padding: 20px 10px;
+            }
+            .titulo-seccion {
+                font-size: 22px;
+            }
+            .cuadricula-estadisticas {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+            .tarjeta-resumen .valor {
+                font-size: 28px;
+            }
+            .fila-dato {
+                font-size: 15px;
+                padding: 12px 15px;
+            }
+            .btn {
+                padding: 10px 20px;
+                font-size: 15px;
+                margin: 5px;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<header>
+<!-- Barra de Navegación -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">
+            <i class="fas fa-landmark me-2"></i>Cooperativa
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menuNavegacion">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i>Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="socios.html"><i class="fas fa-users me-1"></i>Socios</a></li>
+                <li class="nav-item"><a class="nav-link" href="ahorros.html"><i class="fas fa-piggy-bank me-1"></i>Ahorros</a></li>
+                <li class="nav-item"><a class="nav-link active" href="reportes.html"><i class="fas fa-file-pdf me-1"></i>Reportes</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-<h2>Reportes de la Cooperativa</h2>
+<!-- Contenedor Principal -->
+<main class="contenedor-principal">
+    <h2 class="text-center titulo-seccion"><i class="fas fa-chart-line me-2"></i>Reportes Generales de la Cooperativa</h2>
 
-</header>
+    <!-- Tarjetas de Resumen Rápido -->
+    <div class="cuadricula-estadisticas">
+        <div class="tarjeta-resumen tarjeta-socios">
+            <i class="fas fa-user-friends"></i>
+            <div class="valor" id="totalSocios">0</div>
+            <div class="etiqueta">Total Socios</div>
+        </div>
+        <div class="tarjeta-resumen tarjeta-depositos">
+            <i class="fas fa-money-check-alt"></i>
+            <div class="valor">$ <span id="totalDepositos">0.00</span></div>
+            <div class="etiqueta">Total Depósitos</div>
+        </div>
+        <div class="tarjeta-resumen tarjeta-retiros">
+            <i class="fas fa-hand-holding-usd"></i>
+            <div class="valor">$ <span id="totalRetiros">0.00</span></div>
+            <div class="etiqueta">Total Retiros</div>
+        </div>
+        <div class="tarjeta-resumen tarjeta-saldo">
+            <i class="fas fa-coins"></i>
+            <div class="valor">$ <span id="saldoDisponible">0.00</span></div>
+            <div class="etiqueta">Saldo General</div>
+        </div>
+    </div>
 
-<div class="container">
+    <!-- Resumen Detallado -->
+    <div class="tarjeta-reporte">
+        <div class="cabecera-reporte">
+            <i class="fas fa-clipboard-list me-2"></i>Resumen General de Operaciones
+        </div>
+        <div class="cuerpo-reporte">
+            <div class="fila-dato">
+                <span>Cantidad total de socios registrados:</span>
+                <span class="valor" id="resumenSocios">0</span>
+            </div>
+            <div class="fila-dato">
+                <span>Monto total depositado por socios:</span>
+                <span class="valor">$ <span id="resumenDepositos">0.00</span></span>
+            </div>
+            <div class="fila-dato">
+                <span>Monto total retirado por socios:</span>
+                <span class="valor">$ <span id="resumenRetiros">0.00</span></span>
+            </div>
+            <div class="fila-dato">
+                <span>Saldo actual disponible en la cooperativa:</span>
+                <span class="valor">$ <span id="resumenSaldo">0.00</span></span>
+            </div>
+        </div>
+    </div>
 
-<div class="row">
+    <!-- Botones de Acción -->
+    <div class="contenedor-botones">
+        <button class="btn btn-descargar" id="btnDescargar">
+            <i class="fas fa-download me-2"></i>Descargar Reporte (TXT)
+        </button>
+        <a href="index.html" class="btn btn-volver">
+            <i class="fas fa-arrow-left me-2"></i>Volver al Inicio
+        </a>
+    </div>
+</main>
 
-<div class="col-md-3">
-<div class="card shadow p-3">
-<h4>👥 Socios</h4>
-<h2 id="socios">20</h2>
-</div>
-</div>
+<!-- Pie de Página -->
+<footer class="pie-pagina">
+    <p class="mb-2"><strong>Cooperativa de Ahorro y Crédito | Sistema de Gestión de Socios y Ahorros</strong></p>
+    <p class="mb-0">© 2026 Todos los derechos reservados | Desarrollado por: Danny Ariel Cobo Mosquera - Jostin Andrés Guarnizo Vargas</p>
+</footer>
 
-<div class="col-md-3">
-<div class="card shadow p-3">
-<h4>💰 Depósitos</h4>
-<h2 id="depositos">$12000</h2>
-</div>
-</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// 📊 Calcular todos los valores automáticamente
+function cargarDatosReporte() {
+    // Obtener datos del LocalStorage
+    const socios = JSON.parse(localStorage.getItem('sociosCooperativa')) || [];
+    const movimientos = JSON.parse(localStorage.getItem('movimientosCooperativa')) || [];
 
-<div class="col-md-3">
-<div class="card shadow p-3">
-<h4>💸 Retiros</h4>
-<h2 id="retiros">$4500</h2>
-</div>
-</div>
+    // Calcular totales
+    const totalSocios = socios.length;
+    let totalDep = 0;
+    let totalRet = 0;
 
-<div class="col-md-3">
-<div class="card shadow p-3">
-<h4>🏦 Saldo</h4>
-<h2 id="saldo">$7500</h2>
-</div>
-</div>
+    movimientos.forEach(mov => {
+        const monto = parseFloat(mov.monto);
+        if (mov.tipo === 'Depósito') totalDep += monto;
+        if (mov.tipo === 'Retiro') totalRet += monto;
+    });
 
-</div>
+    const saldo = totalDep - totalRet;
 
-<div class="card mt-4 shadow">
+    // Actualizar tarjetas superiores
+    document.getElementById('totalSocios').textContent = totalSocios;
+    document.getElementById('totalDepositos').textContent = totalDep.toFixed(2);
+    document.getElementById('totalRetiros').textContent = totalRet.toFixed(2);
+    document.getElementById('saldoDisponible').textContent = saldo.toFixed(2);
 
-<div class="card-body">
+    // Actualizar resumen detallado
+    document.getElementById('resumenSocios').textContent = totalSocios;
+    document.getElementById('resumenDepositos').textContent = totalDep.toFixed(2);
+    document.getElementById('resumenRetiros').textContent = totalRet.toFixed(2);
+    document.getElementById('resumenSaldo').textContent = saldo.toFixed(2);
+}
 
-<h3>Resumen General</h3>
+// 📥 Función para descargar el reporte
+document.getElementById('btnDescargar').addEventListener('click', () => {
+    const totalSocios = document.getElementById('totalSocios').textContent;
+    const totalDep = document.getElementById('totalDepositos').textContent;
+    const totalRet = document.getElementById('totalRetiros').textContent;
+    const saldo = document.getElementById('saldoDisponible').textContent;
+    const fecha = new Date().toLocaleDateString('es-EC', {dateStyle: 'full'});
 
-<table class="table table-bordered">
+    const contenido = `
+==================================================
+        REPORTE GENERAL DE LA COOPERATIVA
+==================================================
+Fecha de emisión: ${fecha}
 
-<tr>
-<th>Total de Socios</th>
-<td id="rSocios">20</td>
-</tr>
+📋 DATOS GENERALES
+--------------------------------------------------
+Total de Socios Registrados:      ${totalSocios}
 
-<tr>
-<th>Total Depositado</th>
-<td id="rDepositos">$12000</td>
-</tr>
+💰 MOVIMIENTOS ECONÓMICOS
+--------------------------------------------------
+Total Depósitos Realizados:       $ ${totalDep}
+Total Retiros Realizados:         $ ${totalRet}
+SALDO DISPONIBLE ACTUAL:          $ ${saldo}
 
-<tr>
-<th>Total Retirado</th>
-<td id="rRetiros">$4500</td>
-</tr>
+==================================================
+Sistema de Gestión de Socios y Ahorros
+Desarrollado por: Danny Ariel Cobo Mosquera
+                  Jostin Andrés Guarnizo Vargas
+==================================================
+    `;
 
-<tr>
-<th>Saldo Disponible</th>
-<td id="rSaldo">$7500</td>
-</tr>
+    // Crear archivo para descargar
+    const blob = new Blob([contenido], {type: 'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Reporte_Cooperativa_${new Date().toISOString().split('T')[0]}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+});
 
-</table>
-
-<a href="index.html" class="btn btn-primary">
-Volver al Inicio
-</a>
-
-</div>
-
-</div>
-
-</div>
-
+// 🚀 Cargar datos al abrir la página
+document.addEventListener('DOMContentLoaded', cargarDatosReporte);
+</script>
 </body>
 </html>
